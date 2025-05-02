@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Client</title>
+</head>
+<body>
+    <h1>Cliente WebSocket</h1>
+    <audio id="miAudio" src="" preload="auto"></audio>
+    <div id="messages"></div>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+        const ws = new WebSocket('ws://localhost:3000');
+
+        // Evento cuando se abre la conexión
+        ws.onopen = () => {
+            console.log('Conectado al servidor WebSocket');
+        };
+
+        // Evento cuando se recibe un mensaje del servidor
+        ws.onmessage = (event) => {
+            const message = event.data; // El texto plano recibido
+            console.log(`Mensaje del servidor: ${message}`);
+            const newMessage = document.createElement('div');
+            newMessage.textContent = message; // Mostrar el texto en la página
+            const audio = new Audio('Sounds/'+message);
+            audio.play();
+        };
+
+        // Evento para manejar el cierre de la conexión
+        ws.onclose = () => {
+            console.log('Desconectado del servidor WebSocket');
+        };
+        
+         // Esperar a que el usuario haga clic en el documento
+        document.body.addEventListener('click', () => {
+            // Iniciar WebSocket solo una vez
+            if (!ws || ws.readyState === WebSocket.CLOSED) {
+                startWebSocket();
+            }
+        });
+    </script>
+</body>
+</html>
